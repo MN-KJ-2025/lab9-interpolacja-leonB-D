@@ -26,7 +26,9 @@ def chebyshev_nodes(n: int = 10) -> Union[np.ndarray, None]:
     for i in range(n+1):
         cheb[i] = np.cos(i*np.pi/n)
     
-    return sorted(cheb)
+    cheb.sort()
+    
+    return cheb
 
 
 def bar_cheb_weights(n: int = 10) -> Union[np.ndarray, None]:
@@ -71,7 +73,22 @@ def barycentric_inte(
         (np.ndarray): Wektor wartości funkcji interpolującej (n,).
         Jeżeli dane wejściowe są niepoprawne funkcja zwraca `None`.
     """
-    return 
+    if not (isinstance(xi, np.ndarray) and isinstance(yi, np.ndarray) and isinstance(wi, np.ndarray) and isinstance(x, np.ndarray)):
+        return None
+
+    n = len(x)
+    m = len(xi)
+    p = np.ndarray(n,)
+
+    for i in range(n):
+        num = 0
+        den = 0
+        for j in range(m):
+            num += (wi[j] / (x[i] - xi[j])) * yi[j]
+            den += wi[j] / (x[i] - xi[j])
+        p[i] = num/den
+
+    return p
 
 
 def L_inf(
